@@ -6,6 +6,8 @@ import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.roomdemo.adapter.MyRecyclerViewAdapter
 import com.example.roomdemo.databinding.ActivityMainBinding
 import com.example.roomdemo.db.SubscriberDAO
 import com.example.roomdemo.db.SubscriberDatabase
@@ -28,16 +30,23 @@ class MainActivity : AppCompatActivity() {
         subscriberViewModel= ViewModelProvider(this, factory).get(SubscriberViewModel::class.java)
         binding.myViewModel = subscriberViewModel
         binding.lifecycleOwner= this
-        displaySubscribersList()
+        initRecyclerView()
     }
 
     //this is a function that observes the list of subscribers
     private fun displaySubscribersList(){
         subscriberViewModel.subscribers.observe(this, Observer {
             Log.i("LIST OF SUBS", it.toString())
+            //bind your custom adapter to recycler view and pass the subscribers as parameter
+            binding.subscriberRecyclerView.adapter= MyRecyclerViewAdapter(it);
+
         })
     }
 
     //this displays list of subscribers to the recycler view
+    private fun initRecyclerView(){
+        binding.subscriberRecyclerView.layoutManager= LinearLayoutManager(this)
+        displaySubscribersList()
+    }
 
 }
