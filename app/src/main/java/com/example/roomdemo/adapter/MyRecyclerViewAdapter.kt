@@ -10,7 +10,7 @@ import com.example.roomdemo.databinding.ActivityMainBinding
 import com.example.roomdemo.databinding.ListItemBinding
 import com.example.roomdemo.db.Subscriber
 
-class MyRecyclerViewAdapter(private val subscribers: List<Subscriber>):RecyclerView.Adapter<ViewHolder>() {
+class MyRecyclerViewAdapter(private val subscribers: List<Subscriber>, private val clickListener:(Subscriber)->Unit):RecyclerView.Adapter<ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding :ListItemBinding =
@@ -23,16 +23,19 @@ class MyRecyclerViewAdapter(private val subscribers: List<Subscriber>):RecyclerV
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-       holder.bind(subscribers[position])
+       holder.bind(subscribers[position], clickListener)
     }
 
 }
 
 class ViewHolder (val binding:ListItemBinding):RecyclerView.ViewHolder(binding.root){
 
-    fun bind(subscriber: Subscriber){
+    fun bind(subscriber: Subscriber, clickListener:(Subscriber)->Unit){
         binding.nameTextView.text= subscriber.name
         binding.emailTextView.text = subscriber.email
+        binding.listItemLayout.setOnClickListener{
+            clickListener(subscriber)
+        }
 
     }
 
